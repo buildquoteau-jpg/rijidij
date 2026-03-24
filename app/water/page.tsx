@@ -1,33 +1,30 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Nav from '@/components/Nav'
+import EditSidebar from '@/components/EditSidebar'
 import config from '@/config'
-
-// 📋 TEMPLATE — Water page
-// 🔧 BUILDER: Fill in the sections marked with 🔧 from your onsite visit notes
-// 👤 OWNER: Add new readings via the edit sidebar after handover
+import { supabase } from '@/lib/supabase'
 
 interface BoreReading {
+  id?: string
   year: number
   month: string
   depth: string
   note?: string
 }
 
-// 🔧 REPLACE these with the customer's actual bore readings
-const boreReadings: BoreReading[] = [
+const defaultReadings: BoreReading[] = [
   { year: 2025, month: 'Jan', depth: '0.0', note: 'First reading — add yours here' },
 ]
 
-// 🔧 REPLACE with how THIS property measures their bore (or tank, or rainfall)
 const measurementMethod = `Describe how to take a reading here.
 Example: Lower the rope until wet. Count the dry metres. That is your reading.
 Include any quirks specific to this property.`
 
-// 🔧 SET these to true/false based on what this property actually has
 const waterConfig = {
-  hasBore: true,       // Does the property have a bore?
-  hasTank: true,       // Does the property have a rainwater tank?
-  hasRainfall: false,  // Do they track rainfall separately?
+  hasBore: true,
+  hasTank: true,
+  hasRainfall: false,
   boreContactName: 'Contact name for bore help',
   boreContactNote: 'Any notes about who to call and what to tell them.',
 }
@@ -35,8 +32,40 @@ const waterConfig = {
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 export default function WaterPage() {
-  const latestReading = boreReadings[0]
-  const latestDepth = parseFloat(latestReading.depth)
+  const [readings, setReadings] = useState<BoreReading[]>(defaultReadings)
+  const [newReading, setNewReading] = useState({ month: 'Jan', year: new Date().getFullYear(), depth: '', note: '' })
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    loadReadings()
+  }, [])
+
+  const loadReadings = async () => {
+    const { data } = await supabase
+      .from('bore_readings')
+      .select('*')
+      .order('year', { ascending: false })
+    if (data && data.length > 0) setReadings(data)
+  }
+
+  const saveReading = async () => {
+    if (!newReading.depth) return
+    setSaving(true)
+    const { error } = await supabase
+      .from('bore_readings')
+      .insert([newReading])
+    if (!error) {
+      await loadReadings()
+      setNewReading({ month: 'Jan', year: new Date().getFullYear(), depth: '', note: '' })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    }
+    setSaving(false)
+  }
+
+  const latestReading = readings[0]
+  const latestDepth = parseFloat(latestReading?.depth || '0')
   const waterLevel = latestDepth < 10 ? 'Good' : latestDepth < 12 ? 'Normal' : 'Low'
   const levelColour = latestDepth < 10 ? 'text-green-600' : latestDepth < 12 ? 'text-amber-500' : 'text-red-500'
 
@@ -54,7 +83,7 @@ export default function WaterPage() {
 
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-10">
 
-        {waterConfig.hasBore && (
+        {waterConfig.hasBore && latestReading && (
           <div className="bg-white rounded-2xl shadow-sm border border-light p-6">
             <h2 className="text-lg font-semibold text-dark mb-4">Latest Bore Reading</h2>
             <div className="flex items-end gap-4">
@@ -96,13 +125,13 @@ export default function WaterPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from(new Set(boreReadings.map(r => r.year)))
+                  {Array.from(new Set(readings.map(r => r.year)))
                     .sort((a, b) => b - a)
                     .map(year => (
                       <tr key={year} className="border-b border-light hover:bg-light/50">
                         <td className="py-2 pr-4 font-medium text-dark">{year}</td>
                         {months.map(month => {
-                          const reading = boreReadings.find(r => r.year === year && r.month === month)
+                          const reading = readings.find(r => r.year === year && r.month === month)
                           return (
                             <td key={month} className="text-center py-2 px-1">
                               {reading ? (
@@ -136,6 +165,65 @@ export default function WaterPage() {
       <footer className="text-center text-sm text-dark opacity-40 py-8">
         {config.propertyName} · {config.location.region}
       </footer>
+
+      {/* Edit Sidebar */}
+      <EditSidebar pageName="Water">
+        <div className="space-y-4">
+          <h3 className="font-semibold text-dark">Add Bore Reading</h3>
+
+          <div>
+            <label className="text-xs text-dark opacity-50 block mb-1">Month</label>
+            <select
+              value={newReading.month}
+              onChange={e => setNewReading({...newReading, month: e.target.value})}
+              className="w-full border border-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            >
+              {months.map(m => <option key={m}>{m}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs text-dark opacity-50 block mb-1">Year</label>
+            <input
+              type="number"
+              value={newReading.year}
+              onChange={e => setNewReading({...newReading, year: parseInt(e.target.value)})}
+              className="w-full border border-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-dark opacity-50 block mb-1">Depth (metres below ground)</label>
+            <input
+              type="text"
+              value={newReading.depth}
+              onChange={e => setNewReading({...newReading, depth: e.target.value})}
+              placeholder="eg. 11.5"
+              className="w-full border border-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-dark opacity-50 block mb-1">Note (optional)</label>
+            <textarea
+              value={newReading.note}
+              onChange={e => setNewReading({...newReading, note: e.target.value})}
+              placeholder="Any notes about this reading"
+              rows={3}
+              className="w-full border border-light rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+            />
+          </div>
+
+          <button
+            onClick={saveReading}
+            disabled={saving || !newReading.depth}
+            className="w-full bg-primary text-white rounded-lg py-2.5 text-sm font-medium hover:bg-primary/90 transition disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : saved ? '✅ Saved!' : '+ Add Reading'}
+          </button>
+        </div>
+      </EditSidebar>
+
     </main>
   )
 }
