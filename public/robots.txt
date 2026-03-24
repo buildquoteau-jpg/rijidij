@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# Southwest Story sites are private by default.
+# To allow search engine indexing, change Disallow to Allow
+# and update noIndex in config.ts to false.
