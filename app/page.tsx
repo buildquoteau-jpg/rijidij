@@ -59,7 +59,14 @@ export default function Home() {
 
       <footer className="text-center text-sm text-dark opacity-40 py-8 border-t border-light">
         <p>{config.propertyName} · {config.location.region}</p>
-        <p className="mt-1 opacity-50 text-xs">Built with Southwest Story · <a href="/privacy-policy" className="underline">Privacy</a> · <a href="/faq" className="underline">FAQ</a></p>
+        <p className="mt-2 opacity-50 text-xs">
+          <a href="/faq" className="underline">FAQ</a>
+          {' · '}
+          <a href="/privacy-policy" className="underline">Privacy Policy</a>
+          {' · '}
+          <a href="/disclaimer" className="underline">Disclaimer</a>
+        </p>
+        <p className="mt-1 opacity-30 text-xs">Built with Southwest Story · Dunsborough WA</p>
       </footer>
     </main>
   )
