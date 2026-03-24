@@ -5,7 +5,8 @@ import config from '@/config'
 
 const tileOrder = [
   { key: 'gallery',     href: '/gallery' },
-  { key: 'ourStory',    href: '/our-story' },
+  { key: 'theLand',     href: '/our-story' },
+  { key: 'ourFamily',   href: '/our-family' },
   { key: 'orchard',     href: '/orchard' },
   { key: 'water',       href: '/water' },
   { key: 'wildlife',    href: '/wildlife' },
@@ -39,7 +40,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Page tiles — 2 column grid on desktop, 1 column on mobile */}
+      {/* Page tiles */}
       <section className="max-w-3xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-4">
         {enabledTiles.map((tile) => {
           const page = config.pages[tile.key as keyof typeof config.pages]
@@ -56,9 +57,9 @@ export default function Home() {
         })}
       </section>
 
-      {/* Footer */}
-      <footer className="text-center text-sm text-dark opacity-40 py-8">
-        {config.propertyName} · {config.location.region}
+      <footer className="text-center text-sm text-dark opacity-40 py-8 border-t border-light">
+        <p>{config.propertyName} · {config.location.region}</p>
+        <p className="mt-1 opacity-50 text-xs">Built with Southwest Story · <a href="/privacy-policy" className="underline">Privacy</a> · <a href="/faq" className="underline">FAQ</a></p>
       </footer>
     </main>
   )

@@ -2,23 +2,29 @@
 import Nav from '@/components/Nav'
 import config from '@/config'
 
-// 📋 TEMPLATE — Gallery page
-// 🔧 BUILDER: Add any initial photos provided by the owner during the visit
-// 👤 OWNER: Upload new photos via the edit sidebar
+// 📋 TEMPLATE — Gallery page with public and private sections
+// 🔧 BUILDER: Add initial photos from the visit
+// 👤 OWNER: Upload photos via the edit sidebar — choose public or private for each
 
 interface Photo {
   url: string
   caption: string
   date?: string
+  isPrivate: boolean
   category?: 'property' | 'garden' | 'wildlife' | 'seasons' | 'people' | 'archival'
 }
 
-// 🔧 REPLACE with actual photos — urls will point to Supabase storage after setup
+// 🔧 REPLACE with actual photos
+// isPrivate: false = anyone can see it (nature, land, seasons)
+// isPrivate: true  = login required (family, gatherings, personal)
 const photos: Photo[] = [
-  { url: '/placeholder-photo.jpg', caption: 'Add your first photo here', date: '2025-01', category: 'property' },
+  { url: '/placeholder.jpg', caption: 'A beautiful view of the property', date: '2025-01', isPrivate: false, category: 'property' },
+  { url: '/placeholder.jpg', caption: 'Family gathering — private', date: '2025-01', isPrivate: true, category: 'people' },
 ]
 
-const categories = ['all', 'property', 'garden', 'wildlife', 'seasons', 'people', 'archival']
+// For now showing all — auth will filter private ones after Supabase setup
+const publicPhotos = photos.filter(p => !p.isPrivate)
+const privatePhotos = photos.filter(p => p.isPrivate)
 
 export default function GalleryPage() {
   return (
@@ -33,40 +39,34 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
+      <div className="max-w-3xl mx-auto px-6 py-10 space-y-10">
 
-        {/* Category filter */}
-        <div className="flex gap-2 flex-wrap">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              className="px-3 py-1.5 rounded-full text-sm border border-light bg-white text-dark opacity-60 hover:opacity-100 hover:border-primary hover:text-primary transition capitalize"
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Public gallery */}
+        <div>
+          <h2 className="text-lg font-semibold text-dark mb-4">The Property</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {publicPhotos.map((photo, i) => (
+              <PhotoCard key={i} photo={photo} />
+            ))}
+          </div>
         </div>
 
-        {/* Photo grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {photos.map((photo, i) => (
-            <div key={i} className="group rounded-xl overflow-hidden bg-white shadow-sm border border-light">
-              <div className="aspect-square bg-light flex items-center justify-center">
-                <img
-                  src={photo.url}
-                  alt={photo.caption}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none'
-                  }}
-                />
+        {/* Private gallery — shown only when logged in */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="text-lg font-semibold text-dark">Family & Private</h2>
+            <span className="text-xs bg-light text-secondary px-2 py-0.5 rounded-full border border-light">private</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {privatePhotos.map((photo, i) => (
+              <PhotoCard key={i} photo={photo} />
+            ))}
+            {privatePhotos.length === 0 && (
+              <div className="col-span-3 rounded-2xl border border-dashed border-light p-8 text-center">
+                <p className="text-sm text-dark opacity-40">Private photos will appear here after login</p>
               </div>
-              <div className="p-2">
-                <p className="text-xs text-dark opacity-60 truncate">{photo.caption}</p>
-                {photo.date && <p className="text-xs text-dark opacity-30">{photo.date}</p>}
-              </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
 
       </div>
@@ -75,5 +75,26 @@ export default function GalleryPage() {
         {config.propertyName} · {config.location.region}
       </footer>
     </main>
+  )
+}
+
+function PhotoCard({ photo }: { photo: Photo }) {
+  return (
+    <div className="group rounded-xl overflow-hidden bg-white shadow-sm border border-light">
+      <div className="aspect-square bg-light flex items-center justify-center overflow-hidden">
+        <img
+          src={photo.url}
+          alt={photo.caption}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none'
+          }}
+        />
+      </div>
+      <div className="p-2">
+        <p className="text-xs text-dark opacity-60 truncate">{photo.caption}</p>
+        {photo.date && <p className="text-xs text-dark opacity-30">{photo.date}</p>}
+      </div>
+    </div>
   )
 }

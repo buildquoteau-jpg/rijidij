@@ -6,7 +6,6 @@ const config = {
   ownerEmail: 'owner@email.com',
 
   // 🔧 Privacy — noIndex blocks Google and all search engines
-  // Set to false only if the owner explicitly wants to be searchable
   noIndex: true,
   sitePrivate: false,
 
@@ -18,7 +17,8 @@ const config = {
 
   pages: {
     gallery:     { enabled: true,  private: false, emoji: '📷', title: 'Gallery',     description: 'Photos of the property, seasons and life on the land.' },
-    ourStory:    { enabled: true,  private: false, emoji: '📖', title: 'Our Story',   description: 'The history of the land and the people who call it home.' },
+    theLand:     { enabled: true,  private: false, emoji: '🌿', title: 'The Land',    description: 'A record of stewardship — the history of this land and all who have tended it.' },
+    ourFamily:   { enabled: true,  private: false, emoji: '📖', title: 'Our Family',  description: 'The people who call this place home.' },
     orchard:     { enabled: true,  private: false, emoji: '🍊', title: 'Orchard',     description: 'What blooms when, seasonal jobs and harvest notes.' },
     water:       { enabled: true,  private: false, emoji: '💧', title: 'Water',       description: 'Bore data, tank levels and rainfall records.' },
     wildlife:    { enabled: true,  private: false, emoji: '🦜', title: 'Wildlife',    description: 'Sightings log, bird list and pest species.' },
