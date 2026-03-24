@@ -1,10 +1,6 @@
-'use client'
 import Nav from '@/components/Nav'
+import PrivateGate from '@/components/PrivateGate'
 import config from '@/config'
-
-// 📋 TEMPLATE — Owner Notes page (private, login required)
-// 🔧 BUILDER: Fill in ALL fields before handover
-// This page contains everything the owner or a future engineer needs
 
 // 🔧 REPLACE with actual credentials before handover
 const ownerNotes = {
@@ -42,83 +38,85 @@ Things to remember, quirks, who set it up, when.`,
 
 export default function OwnerReadmePage() {
   return (
-    <main className="min-h-screen bg-light">
-      <Nav />
+    <PrivateGate pageName="Owner Notes">
+      <main className="min-h-screen bg-light">
+        <Nav />
 
-      <div className="bg-primary text-white px-6 py-10">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-4xl mb-3">🔑</div>
-          <h1 className="text-3xl font-bold">Owner Notes</h1>
-          <p className="mt-2 opacity-75">Credentials, accounts and handover information</p>
-        </div>
-      </div>
-
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
-
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-800 text-sm">
-          🔒 This page is private. Keep this information secure and do not share the link.
+        <div className="bg-primary text-white px-6 py-10">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-4xl mb-3">🔑</div>
+            <h1 className="text-3xl font-bold">Owner Notes</h1>
+            <p className="mt-2 opacity-75">Credentials, accounts and handover information</p>
+          </div>
         </div>
 
-        {/* Gmail */}
-        <Section title="Gmail Account" emoji="📧">
-          <Field label="Email" value={ownerNotes.gmail.address} />
-          <Field label="Password hint" value={ownerNotes.gmail.hint} />
-        </Section>
+        <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
 
-        {/* GitHub */}
-        <Section title="GitHub" emoji="💾">
-          <Field label="Username" value={ownerNotes.github.username} />
-          <Field label="Repo" value={ownerNotes.github.repoUrl} isLink />
-        </Section>
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-800 text-sm">
+            🔒 This page is private. Keep this information secure and do not share the link.
+          </div>
 
-        {/* Vercel */}
-        <Section title="Vercel (Hosting)" emoji="▲">
-          <Field label="Project" value={ownerNotes.vercel.projectName} />
-          <Field label="Dashboard" value={ownerNotes.vercel.dashboardUrl} isLink />
-        </Section>
-
-        {/* Supabase */}
-        <Section title="Supabase (Database)" emoji="🗄️">
-          <Field label="Project" value={ownerNotes.supabase.projectName} />
-          <Field label="Dashboard" value={ownerNotes.supabase.dashboardUrl} isLink />
-        </Section>
-
-        {/* Domain */}
-        <Section title="Domain Name" emoji="🌐">
-          <Field label="Domain" value={ownerNotes.domain.domainName} />
-          <Field label="Registrar" value={ownerNotes.domain.registrar} />
-          <Field label="Login" value={ownerNotes.domain.loginUrl} isLink />
-          <Field label="Username" value={ownerNotes.domain.username} />
-          <Field label="Password hint" value={ownerNotes.domain.hint} />
-          <Field label="Renews" value={ownerNotes.domain.renewsOn} />
-        </Section>
-
-        {/* Site login */}
-        <Section title="Site Login" emoji="🔐">
-          <Field label="Password hint" value={ownerNotes.sitePassword.hint} />
-        </Section>
-
-        {/* Notes */}
-        {ownerNotes.notes && (
-          <Section title="Notes" emoji="📝">
-            <p className="text-sm text-dark opacity-70 whitespace-pre-line">{ownerNotes.notes}</p>
+          <Section title="Gmail Account" emoji="📧">
+            <Field label="Email" value={ownerNotes.gmail.address} />
+            <Field label="Password hint" value={ownerNotes.gmail.hint} />
           </Section>
-        )}
 
-        {/* Support */}
-        <Section title="Southwest Story Support" emoji="🌿">
-          <Field label="Email" value={ownerNotes.southwestStoryContact} />
-          <p className="text-sm text-dark opacity-50 mt-2">
-            Get in touch if you need help with your website or want to add new features.
+          <Section title="GitHub" emoji="💾">
+            <Field label="Username" value={ownerNotes.github.username} />
+            <Field label="Repo" value={ownerNotes.github.repoUrl} isLink />
+          </Section>
+
+          <Section title="Vercel (Hosting)" emoji="▲">
+            <Field label="Project" value={ownerNotes.vercel.projectName} />
+            <Field label="Dashboard" value={ownerNotes.vercel.dashboardUrl} isLink />
+          </Section>
+
+          <Section title="Supabase (Database)" emoji="🗄️">
+            <Field label="Project" value={ownerNotes.supabase.projectName} />
+            <Field label="Dashboard" value={ownerNotes.supabase.dashboardUrl} isLink />
+          </Section>
+
+          <Section title="Domain Name" emoji="🌐">
+            <Field label="Domain" value={ownerNotes.domain.domainName} />
+            <Field label="Registrar" value={ownerNotes.domain.registrar} />
+            <Field label="Login" value={ownerNotes.domain.loginUrl} isLink />
+            <Field label="Username" value={ownerNotes.domain.username} />
+            <Field label="Password hint" value={ownerNotes.domain.hint} />
+            <Field label="Renews" value={ownerNotes.domain.renewsOn} />
+          </Section>
+
+          <Section title="Site Login" emoji="🔐">
+            <Field label="Password hint" value={ownerNotes.sitePassword.hint} />
+          </Section>
+
+          {ownerNotes.notes && (
+            <Section title="Notes" emoji="📝">
+              <p className="text-sm text-dark opacity-70 whitespace-pre-line">{ownerNotes.notes}</p>
+            </Section>
+          )}
+
+          <Section title="Southwest Story Support" emoji="🌿">
+            <Field label="Email" value={ownerNotes.southwestStoryContact} />
+            <p className="text-sm text-dark opacity-50 mt-2">
+              Get in touch if you need help with your website or want to add new features.
+            </p>
+          </Section>
+
+        </div>
+
+        <footer className="text-center text-sm text-dark opacity-40 py-8 border-t border-light">
+          <p>{config.propertyName} · {config.location.region}</p>
+          <p className="mt-1 opacity-50 text-xs">
+            <a href="/faq" className="underline">FAQ</a>
+            {' · '}
+            <a href="/privacy-policy" className="underline">Privacy Policy</a>
+            {' · '}
+            <a href="/disclaimer" className="underline">Disclaimer</a>
           </p>
-        </Section>
+        </footer>
 
-      </div>
-
-      <footer className="text-center text-sm text-dark opacity-40 py-8">
-        {config.propertyName} · {config.location.region}
-      </footer>
-    </main>
+      </main>
+    </PrivateGate>
   )
 }
 
@@ -136,7 +134,8 @@ function Field({ label, value, isLink }: { label: string, value: string, isLink?
     <div className="flex items-start gap-4">
       <span className="text-sm text-dark opacity-40 w-32 flex-shrink-0">{label}</span>
       {isLink ? (
-        <a href={value} target="_blank" rel="noopener noreferrer" className="text-sm text-primary underline break-all">{value}</a>
+        <a href={value} target="_blank" rel="noopener noreferrer"
+          className="text-sm text-primary underline break-all">{value}</a>
       ) : (
         <span className="text-sm text-dark font-medium break-all">{value}</span>
       )}
