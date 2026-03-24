@@ -21,7 +21,6 @@ export default function Nav() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
-
   const currentPage = navLinks.find(link => link.href === pathname)
 
   const enabledLinks = navLinks.filter(
@@ -50,17 +49,17 @@ export default function Nav() {
 
       {/* Breadcrumb bar — shows on all inner pages */}
       {!isHome && (
-        <div className="bg-primary/90 text-white px-6 py-2 flex items-center gap-3 border-t border-white/10">
+        <div className="bg-white border-b border-light px-6 py-3 flex items-center gap-2">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-sm opacity-60 hover:opacity-100 transition"
+            className="text-sm font-medium text-primary hover:underline"
           >
             ← Home
           </Link>
           {currentPage && (
             <>
-              <span className="opacity-30">/</span>
-              <span className="text-sm opacity-90">{currentPage.label}</span>
+              <span className="text-dark opacity-30">/</span>
+              <span className="text-sm text-dark opacity-70">{currentPage.label}</span>
             </>
           )}
         </div>
@@ -78,7 +77,7 @@ export default function Nav() {
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center justify-between py-3 border-b border-white/10 hover:opacity-75 transition ${isActive ? 'opacity-100 font-semibold' : 'opacity-70'}`}
+                    className={`flex items-center justify-between py-3 border-b border-white/10 hover:opacity-100 transition ${isActive ? 'opacity-100 font-semibold' : 'opacity-70'}`}
                   >
                     <span>{page.emoji} {link.label}</span>
                     <div className="flex items-center gap-2">
