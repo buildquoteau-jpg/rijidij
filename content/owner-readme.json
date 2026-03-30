@@ -1,0 +1,12 @@
+{
+  "gmail": "🔧 owner@gmail.com",
+  "gmailHint": "🔧 password hint — stored with owner",
+  "github": "🔧 https://github.com/...",
+  "vercel": "🔧 https://vercel.com/dashboard",
+  "supabase": "🔧 https://supabase.com/dashboard/project/...",
+  "domain": "🔧 propertydomain.com.au",
+  "domainRegistrar": "🔧 Namecheap",
+  "siteLoginEmail": "🔧 owner@gmail.com",
+  "siteLoginHint": "🔧 password hint — change via lock icon on site",
+  "notes": "🔧 Any setup notes for this property"
+}

@@ -3,6 +3,10 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import config from '@/config'
+import theme from '@/theme'
+
+// 📋 TEMPLATE — nav structure stays the same for every customer
+// 🔧 Property name font comes from theme.ts
 
 const navLinks = [
   { key: 'gallery',     href: '/gallery',      label: 'Gallery' },
@@ -22,17 +26,16 @@ export default function Nav() {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const currentPage = navLinks.find(link => link.href === pathname)
-
   const enabledLinks = navLinks.filter(
     (link) => config.pages[link.key as keyof typeof config.pages]?.enabled
   )
-
   return (
     <>
-      {/* Main nav bar */}
       <nav className="bg-primary text-white px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-wide">
-          🌿 {config.propertyName}
+        <Link href="/"
+          className="text-2xl tracking-wide text-white hover:opacity-80 transition"
+          style={{ fontFamily: theme.headingFont }}>
+          {config.propertyName}
         </Link>
         <button
           onClick={() => setOpen(!open)}
@@ -46,14 +49,9 @@ export default function Nav() {
           )}
         </button>
       </nav>
-
-      {/* Breadcrumb bar — shows on all inner pages */}
       {!isHome && (
         <div className="bg-white border-b border-light px-6 py-3 flex items-center gap-2">
-          <Link
-            href="/"
-            className="text-sm font-medium text-primary hover:underline"
-          >
+          <Link href="/" className="text-sm font-medium text-primary hover:underline">
             ← Home
           </Link>
           {currentPage && (
@@ -64,8 +62,6 @@ export default function Nav() {
           )}
         </div>
       )}
-
-      {/* Slide down menu */}
       {open && (
         <div className="bg-primary text-white py-4 shadow-lg">
           <ul className="max-w-3xl mx-auto px-6 flex flex-col gap-1">

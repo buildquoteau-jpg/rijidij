@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import config from '@/config'
+import theme from '@/theme'
 import { AuthProvider } from '@/lib/auth'
 
 const geistSans = Geist({
@@ -31,6 +32,9 @@ export default function RootLayout({
         {config.noIndex && (
           <meta name="robots" content="noindex, nofollow" />
         )}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href={theme.fontImportUrl} rel="stylesheet" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
